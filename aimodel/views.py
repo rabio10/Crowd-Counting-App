@@ -15,7 +15,7 @@ import os
 from torchvision.models.detection.faster_rcnn import fasterrcnn_resnet50_fpn, FastRCNNPredictor
 import time
 
-
+video_num_frames = -1
 
 def index(request):
     return HttpResponse("Hello, world. You're at the ai model index.")
@@ -80,6 +80,10 @@ def process_video(request):
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(output_path, fourcc, 20.0, 
                             (int(cap.get(3)), int(cap.get(4))))
+    global video_num_frames
+    video_num_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    print(video_num_frames)
+    
     
     frames_counter = 0
     time1 = time.time()
@@ -200,3 +204,9 @@ def detect_yolo(request):
         return response
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def hold_on(request):
+    hello = request
+    # do nothing about it
+    print("i am holding on ...", flush=True)
+    return JsonResponse({'msg' : "i am holding on...", 'num_frames': video_num_frames})
