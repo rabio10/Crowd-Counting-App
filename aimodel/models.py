@@ -1,12 +1,15 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
 
+
+fs = FileSystemStorage(location="/DB_files")
 
 class Video(models.Model):
-    video = models.FileField()
+    video = models.FileField(upload_to="DB_files")
     num_in_crowd = models.IntegerField(default=0)
 
 
-class Screenshots(models.Model):
+class Processed_video(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE)
-    screenshot = models.FileField()
-    num_in_screenshot = models.IntegerField(default=0)
+    processed_video = models.FileField(upload_to="DB_files")
+    list_nums_persons = models.JSONField()

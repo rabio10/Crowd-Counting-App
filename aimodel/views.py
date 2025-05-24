@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from wsgiref.util import FileWrapper
 import json
+from django.core.files import File
 
 
 
@@ -35,6 +36,10 @@ def detect_fasterrcnn(request):
         output_path, counts_over_frames = process_video(request)
         
         print("returning processed video")
+         # save to db
+        file_obj = File(open(output_path, 'rb'), name="out_yolo.mp4")
+        processed_instance = Processed_video(video=instance ,processed_video=file_obj, list_nums_persons=json.dumps(counts_over_frames))
+        processed_instance.save()
         # Return processed video
         file = FileWrapper(open(output_path, 'rb'))
         response = HttpResponse(file, content_type='video/mp4')
@@ -138,9 +143,14 @@ def detect_yolo(request):
 
         output_path, counts_over_frames = process_video_yolo(request)
         
-        print("returning processed video")
-        # Return processed video
         file = FileWrapper(open(output_path, 'rb'))
+        print("returning processed video")
+        # save to db
+        file_obj = File(open(output_path, 'rb'), name="out_yolo.mp4")
+        processed_instance = Processed_video(video=instance ,processed_video=file_obj, list_nums_persons=json.dumps(counts_over_frames))
+        processed_instance.save()
+        # Return processed video
+        
         response = HttpResponse(file, content_type='video/mp4')
         response['Content-Disposition'] = 'attachment; filename=processed_video.mp4'
         response['X-list-counts'] = json.dumps(counts_over_frames)
@@ -207,7 +217,7 @@ def process_video_yolo(request):
         #print(list(outputs.keys()))
         # Draw boxes for each detection above threshold
         boxes_count = 0
-        print(outputs.boxes.xyxy.cpu().numpy())
+        
         for box in outputs.boxes.xyxy.cpu().numpy():
             boxes_count += 1
             x1, y1, x2, y2 = box.astype(int)
