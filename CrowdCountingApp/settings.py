@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '3eae-196-115-118-64.ngrok-free.app',
-    '127.0.0.1'
+    '127.0.0.1',
+    '50b7-196-118-4-101.ngrok-free.app',
+    '58d4-196-115-66-39.ngrok-free.app'
 ]
 
 
@@ -125,4 +127,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
+DATA_UPLOAD_MAX_MEMORY_SIZE = 200 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 200 * 1024 * 1024  # 100MB

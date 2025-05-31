@@ -4,7 +4,8 @@
 *.mp4
 *.pt
 model_weights.pth
-
+*.jpeg
+*.jpg
 ### Django ###
 *.log
 *.pot
